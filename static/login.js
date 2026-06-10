@@ -8,7 +8,6 @@ loginBtn.addEventListener("click",async () => {
         "username": username.value,
         'password': password.value
     }
-    alert(data)
     let response = await fetch("/",{
         method: "POST",
         headers: {
@@ -18,5 +17,9 @@ loginBtn.addEventListener("click",async () => {
     })
 
     let data1 = await response.json()
-    alert("data sent")
+    if(data1.body == "login"){
+        window.location.href = `/main/${username.value}`;
+    }else{
+        alert("login unsuccessful")
+    }
 })

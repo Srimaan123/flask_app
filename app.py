@@ -23,18 +23,41 @@ def login():
     cursor = conn.cursor()
     if request.method == "POST":
         post_data = request.get_json()
-        username = post_data.get("body")["usernamee"]
-        password = post_data.get("body")["password"]
+        username = post_data.get("username")
+        password = post_data.get("password")
         cursor.execute("SELECT * FROM users WHERE username=? AND password=?",(username,password))
         user = cursor.fetchone()
-        print(user)
+        if user:
+            conn.close()
+            return jsonify({
+                "status": "success",
+                "body":"valid"
+            })
+        else:
+            conn.close()
+            return jsonify({
+                "status": "success",
+                "body": "not valid"
+            })
     else:
         conn.close()
         return render_template("login.html")
 
-@app.route("/create")
+@app.route("/create",methods=["GET","POST"])
 def create_account():
-    return "development"
+    conn = init()
+    cursor = conn.cursor()
+    if request.method == "POST":
+        post_data = request.get_json()
+
+        username = post_data.get("username")
+        password = post_data.get("password")
+        cursor.execute("INSERT INTO users(username,password) VALUES(?,?)",(username,password))
+        conn.commit()
+        conn.close()
+    else:
+        conn.close()
+        return render_template("create_account.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

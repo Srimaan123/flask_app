@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>create account</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,15 +42,15 @@
     <div class="main flex w-full h-dvh justify-center items-center">
         <div class="form bg-[rgba(255,255,255,0.3)] w-8/12 rounded-xl p-4 flex flex-col items-center">
             <h1 class="text-white text-5xl text-center font-['Inter'] font-black mb-2">welcome to this web app</h1>
-            <h4 class="text-slate-200 text-center text-3xl font-['Fredoka'] font-medium">are you already been to this web app? login below</h4>
+            <h4 class="text-slate-200 text-center text-3xl font-['Fredoka'] font-medium">are you new to this? create account here</h4>
             <div class="flex flex-col w-10/12 mt-8 items-center gap-6">
                 <input type="text" class="input" placeholder="Enter your username" name="username" id="username">
                 <input class="input" type="text" name="password" id="password" placeholder="Enter your password">
-                <button id="login" class="w-[50%] mt-1 p-2 text-black bg-zinc-100 border-0 rounded-xl hover:bg-zinc-200">login</button>
-                <a href="/create" class="text-yellow-300 text-xl font-[Inter] hover:text-yellow-400">dont have an account? create one!</a>
+                <button id="create" class="w-[50%] mt-1 p-2 text-black bg-zinc-100 border-0 rounded-xl hover:bg-zinc-200">create</button>
+                <a href="/" class="text-yellow-300 text-xl font-[Inter] hover:text-yellow-400">already have an account? go to login page!!</a>
             </div>
         </div>
     </div>
-    <script src="../static/login.js"></script>
+    <script src="../static/create_account.js"></script>
 </body>
 </html>
