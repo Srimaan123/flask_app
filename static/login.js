@@ -17,9 +17,9 @@ loginBtn.addEventListener("click",async () => {
     })
 
     let data1 = await response.json()
-    if(data1.body == "login"){
+    if(data1.body == "valid"){
         window.location.href = `/main/${username.value}`;
     }else{
-        alert("login unsuccessful")
+        alert("not login")
     }
 })

@@ -42,7 +42,9 @@ def login():
     else:
         conn.close()
         return render_template("login.html")
+    
 
+#CREATE ACCOUNT
 @app.route("/create",methods=["GET","POST"])
 def create_account():
     conn = init()
@@ -55,9 +57,44 @@ def create_account():
         cursor.execute("INSERT INTO users(username,password) VALUES(?,?)",(username,password))
         conn.commit()
         conn.close()
+        return "account created"
     else:
         conn.close()
         return render_template("create_account.html")
+
+#MAIN
+@app.route("/main/<username>")
+def main(username):
+    return render_template("main.html",username=username)
+
+@app.route("/search/<username>")
+def search(username):
+    return render_template("search.html",username=username)
+
+@app.route("/api/search",methods=["POST"])
+def api():
+    conn = init()
+    cursor = conn.cursor()
+    if request.method == "GET":
+        conn.close()
+    else:
+        if 1 == 1:
+            get_data = request.get_json()
+            query = f'%{get_data.get("query")}%'
+            cursor.execute("SELECT username FROM users WHERE username LIKE ?",(query,))
+            rows = cursor.fetchall()
+            users = [row[0] for row in rows]
+            data = {
+                "body": users
+            }
+            if users:
+                conn.close()
+                return jsonify(data)
+            else:
+                conn.close()
+                return jsonify({
+                    "body": []
+                })
 
 if __name__ == "__main__":
     app.run(debug=True)
