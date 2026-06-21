@@ -26,6 +26,15 @@ def login():
         is_rejected TEXT               
     )
     """)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS chats(
+         sender TEXT,
+         reciever TEXT,
+         message TEXT,
+         is_message_seen TEXT,
+         is_message_deleted TEXT      
+    )
+    """)
     conn.commit()
     conn.close()
     conn = init()
@@ -222,6 +231,9 @@ def accounts():
     return jsonify({
         "accounts": accounts
     })
+@app.route("/chat/<sender>/<reciever>")
+def chats(sender,reciever):
+    return render_template("chat.html",reciever=reciever,username=sender)
 
 if __name__ == "__main__":
     app.run(ssl_context="adhoc",debug=True)
