@@ -207,7 +207,7 @@ def accounts():
     conn = init()
     cursor = conn.cursor()
     get_data = request.get_json()
-    query = f"%{get_data.get("query")}%"
+    query = f"%{get_data.get('query')}%"
     username = get_data.get("username")
     cursor.execute("SELECT * FROM requests WHERE (requested_by = ? AND is_accepted='True' AND requested_to LIKE ?) OR (requested_to=? AND is_accepted='True' AND requested_by LIKE ?)",(username,query,username,query))
     rows = cursor.fetchall()
@@ -224,4 +224,4 @@ def accounts():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True,port=6000)
+    app.run(ssl_context="adhoc",debug=True)
