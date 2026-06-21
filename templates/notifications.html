@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notifications</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <p id="username" style="display: none;">{{ username }}</p>
+    <div class="main flex flex-col h-dvh w-full">
+        <div class="header w-full p-2 h-16 flex items-center border-b border-gray-200">
+            <div class="hover:bg-slate-200 rounded-full aspect-square h-full p-2 flex items-center justify-center" onclick="window.location.href = `/main/${document.querySelector('#username').textContent}`"><i class="fa-solid fa-arrow-left text-2xl"></i></div>
+            <h1 class="text-3xl font-['Fredoka'] font-medium text-center grow">Notifications</h1>
+        </div>
+        <div class="content w-full grow flex flex-col items-center gap-6 p-2">
+            
+        </div>
+        <div class="footer self-end flex w-full border-t border-gray-200">
+            <div class="flex grow justify-around p-2">
+                <div class="h-full aspect-square rounded-full hover:bg-slate-200 flex items-center justify-center" onclick="window.location.href = `/main/${document.getElementById('username').textContent}`"><i class="fas fa-home text-2xl"></i></div>
+                <div class="h-full aspect-square rounded-full hover:bg-slate-200 flex items-center justify-center"><i class="fas fa-film text-2xl"></i></div>
+                <div class="h-full aspect-square rounded-full hover:bg-slate-200 flex items-center justify-center p-2" id="paper-plane"><i class="fas fa-paper-plane text-3xl"></i></div>
+                <div class="h-full aspect-square rounded-full hover:bg-slate-200 flex items-center justify-center" id="search" onclick="window.location.href = `/search/${document.getElementById('username').textContent}`"><i class="fas fa-search text-2xl"></i></div>
+                <div class="h-full aspect-square rounded-full hover:bg-slate-200 flex items-center justify-center"><img src="https://iili.io/CCYYQkX.md.jpg" alt="" srcset="" class="w-10 h-10 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../static/notifications.js"></script>
+</body>
+</html>

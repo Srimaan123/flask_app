@@ -10,21 +10,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../static/style.css">
     <style>
-        
         .main{
-            background: linear-gradient(45deg, #FC466B 0%, #3F5EFB 100%);
+            background: linear-gradient(45deg,#020617,#061a2e,#0b1120);
         }
+        
         .form{
             backdrop-filter: blur(10px);
             border-top: 1px solid white;
             border-left: 1px solid white;
         }
         .input{
-            background: rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
             width: 100%;
             height: 2rem;
             padding: 24px;
-        
+            color: white;
             border-radius: 0.5rem;
         }
         .input:hover{
@@ -32,22 +32,27 @@
         }
         h1{
             font-family: 'Inter';
+            
         }
         button:hover{
             scale: 1.05
+        }
+        .s-duo{
+            background: linear-gradient(45deg,#0a2342,#0f4c81,#1e88e5,#4fc3f7,#d6f4ff);
+            background-clip: text;
+            color: transparent;
         }
     </style>
 </head>
 <body>
     <div class="main flex w-full h-dvh justify-center items-center">
-        <div class="form bg-[rgba(255,255,255,0.3)] w-8/12 rounded-xl p-4 flex flex-col items-center">
-            <h1 class="text-white text-5xl text-center font-['Inter'] font-black mb-2">welcome to this web app</h1>
-            <h4 class="text-slate-200 text-center text-3xl font-['Fredoka'] font-medium">are you already been to this web app? login below</h4>
+        <div class="form bg-white/30 w-8/12 rounded-xl p-4 flex flex-col items-center">
+            <h1 class="text-3xl "><i><span class="s-duo text-3xl">Elite S Duo</span> </i></h1>
             <div class="flex flex-col w-10/12 mt-8 items-center gap-6">
                 <input type="text" class="input" placeholder="Enter your username" name="username" id="username">
                 <input class="input" type="text" name="password" id="password" placeholder="Enter your password">
                 <button id="login" class="w-[50%] mt-1 p-2 text-black bg-zinc-100 border-0 rounded-xl hover:bg-zinc-200">login</button>
-                <a href="/create" class="text-yellow-300 text-xl font-[Inter] hover:text-yellow-400">dont have an account? create one!</a>
+                <a href="/create" class="text-sky-300 text-xl font-[Inter] hover:text-sky-400">dont have an account? create one!</a>
             </div>
         </div>
     </div>
