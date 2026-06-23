@@ -151,6 +151,7 @@ def follow():
             "status": status
         })
     else:
+        conn.close()
         return jsonify({
             status: "rejected"
         })
@@ -209,6 +210,7 @@ def messages(username):
             accounts.append(i[1])
         elif i[1] == username:
             accounts.append(i[0])
+    conn.close()
     return render_template("accounts.html",username=username,accounts=accounts)
 
 @app.route("/api/accounts",methods=["POST"])
@@ -226,14 +228,42 @@ def accounts():
             accounts.append(i[1])
         elif i[1] == username:
             accounts.append(i[0])
-    print(accounts)
     conn.close()
     return jsonify({
         "accounts": accounts
     })
-@app.route("/chat/<sender>/<reciever>")
-def chats(sender,reciever):
-    return render_template("chat.html",reciever=reciever,username=sender)
+@app.route("/chat/<code>")
+def chats(code):
+    conn = init()
+    cursor = conn.cursor()
+    sender,reciever = code.split("-")
+    print(sender,reciever)
+    cursor.execute("SELECT * FROM chats WHERE (sender=? AND reciever=?) OR (sender=? AND reciever=?)",(sender,reciever,reciever,sender))
+    chats = cursor.fetchall()
+    print(chats)
+    conn.close()
+    return render_template("chat.html",reciever=reciever,username=sender,messages=chats)
+
+@app.route("/api/chats",methods=["POST"])
+def chats_api():
+    conn = init()
+    cursor = conn.cursor()
+    get_data = request.get_json()
+    method = get_data.get("method")
+    sender = get_data.get("username")
+    reciever = get_data.get("reciever")
+    if method == "send":
+        message = get_data.get("message")
+        cursor.execute("INSERT INTO chats(sender,reciever,message,is_message_seen,is_message_deleted) VALUES(?,?,?,?,?)",(sender,reciever,message,'False','False'))
+        print(message)
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            "chats_added": 'True',
+            "message": message,
+            "reciever": reciever
+        })
 
 if __name__ == "__main__":
     app.run(ssl_context="adhoc",debug=True)

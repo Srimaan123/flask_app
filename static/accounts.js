@@ -6,7 +6,7 @@ accountList.forEach(account => {
         let clickedAccount = account;
 
         let name = clickedAccount.querySelector(".account-name")
-        window.location.href = `/chat/${document.querySelector('#username').textContent}/${name.textContent}`
+        window.location.href = `/chat/${document.querySelector('#username').textContent}-${name.textContent}`
     })
 });
 
