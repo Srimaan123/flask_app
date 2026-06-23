@@ -1,5 +1,6 @@
 let accountList = document.querySelectorAll(".account")
 let search = document.getElementById("search-account")
+let accountNames = document.querySelectorAll(".account-name")
 
 accountList.forEach(account => {
     account.addEventListener("click",async ()=>{
@@ -39,3 +40,21 @@ search.addEventListener("input",async (e)=>{
         }
     }
 })
+
+async function isNewMessages(){
+    let response = await fetch(`/api/has_new_messages/${document.querySelector("#username").textContent}`,{
+        method: "POST"
+    })
+    let data = await response.json()
+    if (data.new_message_recieved == "True"){
+        for(let i = 0;i < accountList.length;i++){
+            let account = accountList[i]
+            if (data.senders.includes(account.textContent.trim())){
+                account.querySelector(".new-messages").textContent = "new"
+                account.querySelector(".new-messages").style.display = "inline-block"
+            }
+        }
+    }
+}
+
+isNewMessages()

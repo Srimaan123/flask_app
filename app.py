@@ -240,6 +240,7 @@ def chats(code):
     print(sender,reciever)
     cursor.execute("SELECT * FROM chats WHERE (sender=? AND reciever=?) OR (sender=? AND reciever=?)",(sender,reciever,reciever,sender))
     chats = cursor.fetchall()
+    cursor.execute("UPDATE chats SET is_message_seen='True' WHERE reciever=? AND sender=?",(sender,reciever))
     print(chats)
     conn.close()
     return render_template("chat.html",reciever=reciever,username=sender,messages=chats)
@@ -264,6 +265,49 @@ def chats_api():
             "message": message,
             "reciever": reciever
         })
+@app.route("/api/fetch_new_messages/<code>",methods=["POST"])
+def fetch_new_messages(code):
+    conn = init()
+    cursor = conn.cursor()
+    #sender,reciever,length = request.get_json.get("sender"),request.get_json.get('reciever'),request.get_json.get("length")
+    sender,reciever,length = code.split("-")
+    cursor.execute("SELECT * FROM chats WHERE (sender=? AND reciever=?) OR (sender=? AND reciever=?)",(sender,reciever,reciever,sender))
+    rows = cursor.fetchall()
+    messages = [row[2] for row in rows]
+    senders = [row[0] for row in rows]
+    conn.close()
+    if len(rows) > int(length):
+        return jsonify({
+            "reload":"yes",
+            "messages": messages,
+            "senders": senders
+        })
+    else:
+        return jsonify({
+            "reload": "no"
+        })
+
+@app.route("/api/has_new_messages/<username>",methods=["POST"])
+def has_new_messages(username):
+    conn = init()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM chats WHERE is_message_seen='False' AND reciever=?",(username,))
+    rows = cursor.fetchall()
+    senders = [row[0] for row in rows]
+    conn.close()
+    if rows != []:
+        return jsonify({
+            "new_message_recieved": "True",
+            "len": len(rows),
+            "senders": senders
+        })
+    else:
+        return jsonify({
+            "new_message_recieved": "False"
+            
+        })
+
 
 if __name__ == "__main__":
     app.run(ssl_context="adhoc",debug=True)

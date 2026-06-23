@@ -31,11 +31,12 @@
             </div>
             <div class="accounts flex flex-col w-8/12 p-2 gap-2 overflow-auto">
                 {% for account in accounts %}
-                <div class="account p-2 flex hover:bg-zinc-50 items-center border border-gray-200 rounded-xl gap-1">
+                <div class="account p-2 flex hover:bg-zinc-50 items-center border border-gray-200 rounded-xl gap-1 relative">
                     <div class="aspect-square h-12 rounded-full bg-green-300 "></div>
                     <div class="p-2 h-full ">
                         <p class="account-name text-[16px] text-black font-medium font-['Fredoka'] m-0 p-0">{{ account }}</p>
                     </div>
+                    <p class="new-messages text-slate-400 p-2 border border-gray-200 absolute right-4 rounded-full" style="display:none;">1</p>
                 </div>
                 {% endfor %}
             </div>
