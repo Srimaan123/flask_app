@@ -43,18 +43,40 @@ search.addEventListener("input",async (e)=>{
 
 async function isNewMessages(){
     let response = await fetch(`/api/has_new_messages/${document.querySelector("#username").textContent}`,{
-        method: "POST"
+        method: "POST",
+        headers:{
+            "Pragma": "no-cache",
+            "Cache-Control":"no-cache"
+        }
     })
     let data = await response.json()
     if (data.new_message_recieved == "True"){
         for(let i = 0;i < accountList.length;i++){
             let account = accountList[i]
-            if (data.senders.includes(account.textContent.trim())){
+            let accountName = account.querySelector(".account-name")
+            if (data.senders.includes(accountName.textContent)){
                 account.querySelector(".new-messages").textContent = "new"
                 account.querySelector(".new-messages").style.display = "inline-block"
+            }
+            else{
+                account.querySelector(".new-messages").style.display = "none"
             }
         }
     }
 }
 
 isNewMessages()
+
+setInterval(async ()=>{
+    let response = await fetch(`api/fetch_active/${document.querySelector("#username").textContent}`)
+    let data = response.json()
+    for(let i = 0;i < data.active.length;i++){
+        if(data.active.includes(accountNames[i])){
+            accountList[i].querySelector(".active-indicator").style.display = "flex"
+        }
+    }
+},1000)
+
+setInterval(async ()=>{
+    let response = fetch("/api/update_lasst_seen")
+})

@@ -57,6 +57,15 @@ if (messages.scrollHeight > messages.offsetHeight){
     })
 }
 
+setInterval(()=>{
+    if (messages.scrollHeight - messages.scrollTop - messages.clientHeight > 50){
+        scrollBtn.style.display = "flex"
+    }
+    else{
+        scrollBtn.style.display = "none"
+    }
+},1000)
+
 async function fetchNewMessages(){
     let response = await fetch(`/api/fetch_new_messages/${document.getElementById("username").textContent}-${document.querySelector(".reciever").textContent}-${messageList.length}`,{
         method: "POST"

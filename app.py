@@ -1,5 +1,6 @@
 from flask import Flask,render_template,url_for,redirect,request,jsonify
 import sqlite3
+import time
 app = Flask(__name__)
 
 def init():
@@ -15,7 +16,8 @@ def login():
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY,
         username TEXT,
-        password TEXT
+        password TEXT,
+        last_seen TEXT
     )
     ''')
     cursor.execute("""
@@ -237,11 +239,11 @@ def chats(code):
     conn = init()
     cursor = conn.cursor()
     sender,reciever = code.split("-")
-    print(sender,reciever)
+    
     cursor.execute("SELECT * FROM chats WHERE (sender=? AND reciever=?) OR (sender=? AND reciever=?)",(sender,reciever,reciever,sender))
     chats = cursor.fetchall()
     cursor.execute("UPDATE chats SET is_message_seen='True' WHERE reciever=? AND sender=?",(sender,reciever))
-    print(chats)
+    conn.commit()
     conn.close()
     return render_template("chat.html",reciever=reciever,username=sender,messages=chats)
 
@@ -256,7 +258,7 @@ def chats_api():
     if method == "send":
         message = get_data.get("message")
         cursor.execute("INSERT INTO chats(sender,reciever,message,is_message_seen,is_message_deleted) VALUES(?,?,?,?,?)",(sender,reciever,message,'False','False'))
-        print(message)
+        
         conn.commit()
         conn.close()
         
@@ -269,7 +271,7 @@ def chats_api():
 def fetch_new_messages(code):
     conn = init()
     cursor = conn.cursor()
-    #sender,reciever,length = request.get_json.get("sender"),request.get_json.get('reciever'),request.get_json.get("length")
+    
     sender,reciever,length = code.split("-")
     cursor.execute("SELECT * FROM chats WHERE (sender=? AND reciever=?) OR (sender=? AND reciever=?)",(sender,reciever,reciever,sender))
     rows = cursor.fetchall()
@@ -295,6 +297,7 @@ def has_new_messages(username):
     cursor.execute("SELECT * FROM chats WHERE is_message_seen='False' AND reciever=?",(username,))
     rows = cursor.fetchall()
     senders = [row[0] for row in rows]
+    
     conn.close()
     if rows != []:
         return jsonify({
@@ -308,6 +311,36 @@ def has_new_messages(username):
             
         })
 
+@app.route("/api/fetch_active/<username>",methods=["POST"])
+def fetch_active(username):
+    conn = init()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM requests WHERE (requested_by=? AND is_accepted='True') OR (requested_to=? AND is_accepted='True')",(username,username))
+    online_users = []
+    rows = cursor.fetchall()
+    for i in rows:
+        last_seen = i[3]
+        current_time = int(time.time())
+
+        if current_time - last_seen < 200:
+            online_users.append(i[1])
+
+    conn.close()
+    return jsonify({
+        "active": online_users
+        })
+
+@app.route("/api/update_last_seen/<username>",methods=["POST"])
+def update_last_seen(username):
+    conn = init()
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE users SET last_seen=? WHERE username=?",(int(time.time()),username))
+
+    return jsonify({
+        "is_updated": "True"
+        })
 
 if __name__ == "__main__":
     app.run(ssl_context="adhoc",debug=True)
