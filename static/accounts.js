@@ -68,15 +68,24 @@ async function isNewMessages(){
 isNewMessages()
 
 setInterval(async ()=>{
-    let response = await fetch(`api/fetch_active/${document.querySelector("#username").textContent}`)
-    let data = response.json()
+    let response = await fetch(`/api/update_last_seen/${document.querySelector('#username').textContent}`,{
+        method: "POST"
+    })
+    let data = await response.json()
+},3000)
+
+setInterval(async ()=>{
+    let response = await fetch(`/api/fetch_active/${document.querySelector("#username").textContent}`,{
+        method: "POST"
+    })
+    let data = await response.json()
     for(let i = 0;i < data.active.length;i++){
         if(data.active.includes(accountNames[i])){
             accountList[i].querySelector(".active-indicator").style.display = "flex"
         }
+        else{
+            accountList[i].querySelector(".active-indicator").style.display = "none"
+        }
     }
 },1000)
 
-setInterval(async ()=>{
-    let response = fetch("/api/update_lasst_seen")
-})

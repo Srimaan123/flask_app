@@ -4,7 +4,7 @@ import time
 app = Flask(__name__)
 
 def init():
-    return sqlite3.connect("data.db")
+    return sqlite3.connect("data.db",timeout=20)
 
 
 @app.route("/",methods=["GET","POST"])
@@ -319,11 +319,21 @@ def fetch_active(username):
     cursor.execute("SELECT * FROM requests WHERE (requested_by=? AND is_accepted='True') OR (requested_to=? AND is_accepted='True')",(username,username))
     online_users = []
     rows = cursor.fetchall()
-    for i in rows:
-        last_seen = i[3]
+    accounts = []
+    for i in range(len(rows)):
+        if rows[i][0] == username:
+            accounts.append(rows[i][0])
+        else:
+            accounts.append(rows[i][1])
+
+    for i in accounts:
+        cursor.execute("SELECT * FROM users WHERE username=?",(i,))
+        account = cursor.fetchone()
+        print(account)
+        last_seen = account[3]
         current_time = int(time.time())
 
-        if current_time - last_seen < 200:
+        if current_time - int(last_seen) < 200:
             online_users.append(i[1])
 
     conn.close()
@@ -337,7 +347,8 @@ def update_last_seen(username):
     cursor = conn.cursor()
 
     cursor.execute("UPDATE users SET last_seen=? WHERE username=?",(int(time.time()),username))
-
+    conn.commit()
+    conn.close()
     return jsonify({
         "is_updated": "True"
         })
