@@ -72,20 +72,20 @@ setInterval(async ()=>{
         method: "POST"
     })
     let data = await response.json()
-},3000)
+},10000)
 
 setInterval(async ()=>{
     let response = await fetch(`/api/fetch_active/${document.querySelector("#username").textContent}`,{
         method: "POST"
     })
     let data = await response.json()
-    for(let i = 0;i < data.active.length;i++){
-        if(data.active.includes(accountNames[i])){
-            accountList[i].querySelector(".active-indicator").style.display = "flex"
+    accountList.forEach(account=>{
+        accountName = account.querySelector(".account-name").textContent;
+        if(data.active.includes(accountName)){
+            account.querySelector(".active-indicator").style.display = "flex"
+        }else{
+            account.querySelector(".active-indicator").style.display = "none"
         }
-        else{
-            accountList[i].querySelector(".active-indicator").style.display = "none"
-        }
-    }
-},1000)
+    })
+},20000)
 
